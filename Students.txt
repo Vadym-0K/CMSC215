@@ -1,0 +1,3 @@
+Brown, William 72 230 Junior [name, credit hours, quality points, year]
+Johnson, Mary 21 77 Masters [name, credit hours, quality points, degree sought]
+Jones, Sally 32 95 Sophomore [name, credit hours, quality points, year]
