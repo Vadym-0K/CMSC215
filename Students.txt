@@ -1,3 +1,10 @@
-Brown, William 72 230 Junior [name, credit hours, quality points, year]
-Johnson, Mary 21 77 Masters [name, credit hours, quality points, degree sought]
-Jones, Sally 32 95 Sophomore [name, credit hours, quality points, year]
+Scott Emily 55 180 Senior
+Baker Joshua 65 215 Doctorate
+Gonzalez Rebecca 50 160 Junior
+Nelson Brian 28 95 Sophomore
+Carter Rachel 48 160 Masters
+Mitchell Kevin 35 115 Freshman
+Perez Kimberly 40 135 Senior
+Roberts Justin 50 170 Junior
+Turner Megan 60 200 Doctorate
+Phillips Andrew 42 140 Masters
