@@ -4,7 +4,7 @@ Name: Kharchenko, Vadym
 
 Project Name: Programming Project 2 - Student GPA Validator
 
-Date: 05 July, 2024
+Date: 06 July, 2024
 
 Description: The goal of this program is to determine if 
 a student is eligible for membership in an honor society.
