@@ -3,9 +3,11 @@
 // Project: Trip Cost Estimator
 // Date: 7/18/2024
 //---------------------------------------------------------------------
-// Description: A Swing application to estimate trip costs based on user 
-// inputs for distance, gasoline cost, gas mileage, hotel cost, 
-// food cost, number of days, and attractions.
+// Description: A Trip Cost Estimator is a handy Java Swing application designed to 
+// help you calculate the total cost of your trip. You input details like the distance 
+// you'll travel, the cost of gasoline, your car's gas mileage, and other expenses such 
+// as hotel, food, and attractions. The app then does the math and shows you the total 
+// trip cost. It's a simple and efficient tool to help you budget for your trips.
 //---------------------------------------------------------------------
 
 import javax.swing.*;
