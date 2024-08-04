@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class IntervalTimeChecker {
+public class CMSC215PROJ4KharchenkoV {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new DataInput().setVisible(true));
     }
@@ -34,12 +34,13 @@ class Interval<T extends Comparable<T>> {
     }
 }
 
+// Time class
 class Time implements Comparable<Time> {
     private final int hours;
     private final int minutes;
     private final String meridian;
 
-    public Time(int hours, int minutes, String meridian) {
+    public Time(int hours, int minutes, String meridian) throws InvalidTime {
         if (hours < 1 || hours > 12 || minutes < 0 || minutes >= 60
                 || (!meridian.equals("AM") && !meridian.equals("PM"))) {
             throw new InvalidTime("Invalid time format");
@@ -49,36 +50,48 @@ class Time implements Comparable<Time> {
         this.meridian = meridian;
     }
 
-    public Time(String time) {
+    public Time(String time) throws InvalidTime {
         String[] parts = time.split(" ");
-        if (parts.length != 2)
+        if (parts.length != 2) {
             throw new InvalidTime("Invalid time format");
-        String[] hm = parts[0].split(":");
-        if (hm.length != 2)
-            throw new InvalidTime("Invalid time format");
+        }
 
-        int hours = Integer.parseInt(hm[0]);
-        int minutes = Integer.parseInt(hm[1]);
-        String meridian = parts[1];
+        String[] hm = parts[0].split(":");
+        if (hm.length != 2) {
+            throw new InvalidTime("Invalid time format");
+        }
+
+        try {
+            this.hours = Integer.parseInt(hm[0]);
+            this.minutes = Integer.parseInt(hm[1]);
+            this.meridian = parts[1];
+        } catch (NumberFormatException e) {
+            throw new InvalidTime("Hours and minutes must be numeric");
+        }
 
         if (hours < 1 || hours > 12 || minutes < 0 || minutes >= 60
                 || (!meridian.equals("AM") && !meridian.equals("PM"))) {
             throw new InvalidTime("Invalid time format");
         }
-
-        this.hours = hours;
-        this.minutes = minutes;
-        this.meridian = meridian;
     }
 
     @Override
     public int compareTo(Time other) {
-        if (this.meridian.equals(other.meridian)) {
-            if (this.hours != other.hours)
-                return this.hours - other.hours;
-            return this.minutes - other.minutes;
+        int this24Hour = convertTo24HourFormat(this.hours, this.meridian);
+        int other24Hour = convertTo24HourFormat(other.hours, other.meridian);
+
+        if (this24Hour != other24Hour) {
+            return Integer.compare(this24Hour, other24Hour);
         }
-        return this.meridian.equals("AM") ? -1 : 1;
+        return Integer.compare(this.minutes, other.minutes);
+    }
+
+    private int convertTo24HourFormat(int hours, String meridian) {
+        if (meridian.equals("AM")) {
+            return hours == 12 ? 0 : hours;
+        } else {
+            return hours == 12 ? 12 : hours + 12;
+        }
     }
 
     @Override
@@ -87,16 +100,17 @@ class Time implements Comparable<Time> {
     }
 }
 
-class InvalidTime extends RuntimeException {
+// InvalidTime exception class
+class InvalidTime extends Exception {
     public InvalidTime(String message) {
         super(message);
     }
 }
 
 class DataInput extends JFrame {
-    private JTextField interval1StartField, interval1EndField;
-    private JTextField interval2StartField, interval2EndField;
-    private JTextField timeToCheckField;
+    private JTextField int1StartField, int1EndField;
+    private JTextField int2StartField, int2EndField;
+    private JTextField timeCheckField;
     private JTextArea outputArea;
 
     public DataInput() {
@@ -104,51 +118,51 @@ class DataInput extends JFrame {
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 70));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JPanel gridPanel = new JPanel(new GridLayout(6, 3, 10, 10));
+        JPanel matrixPanel = new JPanel(new GridLayout(6, 3, 10, 10));
 
         // Labels for columns
-        gridPanel.add(new JLabel(""));
-        gridPanel.add(new JLabel("Start Time"));
-        gridPanel.add(new JLabel("End Time"));
+        matrixPanel.add(new JLabel(""));
+        matrixPanel.add(new JLabel("Start Time"));
+        matrixPanel.add(new JLabel("End Time"));
 
         // Interval 1 inputs
-        gridPanel.add(new JLabel("Interval 1"));
-        interval1StartField = new JTextField();
-        gridPanel.add(interval1StartField);
-        interval1EndField = new JTextField();
-        gridPanel.add(interval1EndField);
+        matrixPanel.add(new JLabel("Interval 1"));
+        int1StartField = new JTextField();
+        matrixPanel.add(int1StartField);
+        int1EndField = new JTextField();
+        matrixPanel.add(int1EndField);
 
         // Interval 2 inputs
-        gridPanel.add(new JLabel("Interval 2"));
-        interval2StartField = new JTextField();
-        gridPanel.add(interval2StartField);
-        interval2EndField = new JTextField();
-        gridPanel.add(interval2EndField);
+        matrixPanel.add(new JLabel("Interval 2"));
+        int2StartField = new JTextField();
+        matrixPanel.add(int2StartField);
+        int2EndField = new JTextField();
+        matrixPanel.add(int2EndField);
 
         // Compare intervals button
-        gridPanel.add(new JLabel(""));
+        matrixPanel.add(new JLabel(""));
         JButton compareButton = new JButton("Compare Intervals");
         compareButton.addActionListener(new CompareIntervalsActionListener());
-        gridPanel.add(compareButton);
-        gridPanel.add(new JLabel(""));
+        matrixPanel.add(compareButton);
+        matrixPanel.add(new JLabel(""));
 
         // Time to check input
-        gridPanel.add(new JLabel("Time to Check:"));
-        timeToCheckField = new JTextField();
-        gridPanel.add(timeToCheckField);
-        gridPanel.add(new JLabel(""));
+        matrixPanel.add(new JLabel("Time to Check:"));
+        timeCheckField = new JTextField();
+        matrixPanel.add(timeCheckField);
+        matrixPanel.add(new JLabel(""));
 
         // Check time button
-        gridPanel.add(new JLabel(""));
+        matrixPanel.add(new JLabel(""));
         JButton checkTimeButton = new JButton("Check Time");
         checkTimeButton.addActionListener(new CheckTimeActionListener());
-        gridPanel.add(checkTimeButton);
-        gridPanel.add(new JLabel(""));
+        matrixPanel.add(checkTimeButton);
+        matrixPanel.add(new JLabel(""));
 
-        mainPanel.add(gridPanel, BorderLayout.CENTER);
+        mainPanel.add(matrixPanel, BorderLayout.CENTER);
 
         // Output area
         outputArea = new JTextArea();
@@ -163,10 +177,10 @@ class DataInput extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
-                Time start1 = new Time(interval1StartField.getText());
-                Time end1 = new Time(interval1EndField.getText());
-                Time start2 = new Time(interval2StartField.getText());
-                Time end2 = new Time(interval2EndField.getText());
+                Time start1 = new Time(int1StartField.getText());
+                Time end1 = new Time(int1EndField.getText());
+                Time start2 = new Time(int2StartField.getText());
+                Time end2 = new Time(int2EndField.getText());
 
                 Interval<Time> interval1 = new Interval<>(start1, end1);
                 Interval<Time> interval2 = new Interval<>(start2, end2);
@@ -174,12 +188,12 @@ class DataInput extends JFrame {
                 if (interval1.overlaps(interval2)) {
                     outputArea.append("\nThe intervals overlap");
                 } else {
-                    outputArea.append("Intervals are disjointed");
+                    outputArea.append("\nIntervals are disjointed");
                 }
             } catch (InvalidTime ex) {
-                outputArea.append("Invalid time format: " + ex.getMessage() + "\n");
+                outputArea.append("\nInvalid time format: " + ex.getMessage());
             } catch (IllegalArgumentException ex) {
-                outputArea.append("Invalid interval: " + ex.getMessage() + "\n");
+                outputArea.append("\nInvalid interval: " + ex.getMessage());
             }
         }
     }
@@ -188,11 +202,11 @@ class DataInput extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
-                Time start1 = new Time(interval1StartField.getText());
-                Time end1 = new Time(interval1EndField.getText());
-                Time start2 = new Time(interval2StartField.getText());
-                Time end2 = new Time(interval2EndField.getText());
-                Time timeToCheck = new Time(timeToCheckField.getText());
+                Time start1 = new Time(int1StartField.getText());
+                Time end1 = new Time(int1EndField.getText());
+                Time start2 = new Time(int2StartField.getText());
+                Time end2 = new Time(int2EndField.getText());
+                Time timeToCheck = new Time(timeCheckField.getText());
 
                 Interval<Time> interval1 = new Interval<>(start1, end1);
                 Interval<Time> interval2 = new Interval<>(start2, end2);
@@ -201,16 +215,16 @@ class DataInput extends JFrame {
                 boolean inInterval2 = interval2.within(timeToCheck);
 
                 if (inInterval1 && inInterval2) {
-                    outputArea.append("Both intervals contain the time " + timeToCheck + "\n");
+                    outputArea.append("\nBoth intervals contain the time " + timeToCheck);
                 } else if (inInterval1) {
-                    outputArea.append("Only Interval 1 contains the time " + timeToCheck + "\n");
+                    outputArea.append("\nOnly Interval 1 contains the time " + timeCheckField);
                 } else if (inInterval2) {
-                    outputArea.append("Only Interval 2 contains the time " + timeToCheck + "\n");
+                    outputArea.append("\nOnly Interval 2 contains the time " + timeToCheck);
                 } else {
-                    outputArea.append("Neither interval contains the time " + timeToCheck + "\n");
+                    outputArea.append("\nNeither interval contains the time " + timeToCheck);
                 }
             } catch (InvalidTime ex) {
-                outputArea.append("Invalid time format: " + ex.getMessage() + "\n");
+                outputArea.append("Invalid time format: " + ex.getMessage());
             }
         }
     }
