@@ -7,11 +7,8 @@
 // time intervals and check if a specific time falls within those intervals. 
 // It features a user-friendly graphical interface with fields for entering 
 // start and end times for two different intervals. Users can compare these 
-// intervals to see if they overlap, are disjointed, or if one is a sub-interval 
-// of the other. Additionally, users can input a specific time to check whether 
-// it falls within either or both intervals. The program ensures all inputs are 
-// valid and provides clear, informative messages based on the comparisons and 
-// checks.
+// intervals to see if they overlap or are disjointed. Additionally, users can 
+// input a specific time to check whether it falls within either or both intervals.
 //---------------------------------------------------------------------
 
 import javax.swing.*;
